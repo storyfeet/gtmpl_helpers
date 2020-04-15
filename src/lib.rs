@@ -36,11 +36,21 @@ pub mod math;
 /// safe_len returns a length for lists maps and strings, else 0
 pub mod range;
 
-/// Provides the ternary option
+/// Provides the selction uptions like b_sel (basically a turnary) and match
 pub mod select;
+
+/// String functions like ccat (concat) and sep( Separate with )
 pub mod string;
+
+/// Domain specific svg methods for creating trickier shapes.
 pub mod svg;
 
+/// This trait exists to give methods to the Template object directly.
+/// It is not intended to be applied to anything else.
+/// By "use"ing this trait, you gain the ability to write "with_svg()" or "with_all()
+/// and gain the appropriate helpers for your template
+/// q_render is also included to make it slightly easier to render a template.
+/// Rather than having to perform Context::from().unwrap() yourself
 pub trait THelper: Sized {
     fn push_helper(self, fname: &str, f: fn(&[Value]) -> Result<Value, String>) -> Self;
     fn render_me(&self, c: &Context) -> Result<String, String>;
