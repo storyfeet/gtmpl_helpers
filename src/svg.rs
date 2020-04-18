@@ -41,7 +41,7 @@ pub fn font(args: &[Value]) -> Result<Value, String> {
         Some(v) => v.to_string(),
         None => "px".to_string(),
     };
-    Ok(Value::String(format!(r#"font-size="{}{}" {}"#, sz, ff, u)))
+    Ok(Value::String(format!(r#"font-size="{}{2}" {}"#, sz, ff, u)))
 }
 
 fn _xml_es(s: &str) -> String {

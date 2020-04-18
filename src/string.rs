@@ -33,3 +33,62 @@ pub fn sep(args: &[Value]) -> Result<Value, String> {
     let sp = args[0].to_string();
     Ok(Value::String(_sep(&sp, &args[1..])?))
 }
+
+pub fn wrap(args: &[Value]) -> Result<Value, String> {
+    let s = match args.get(0) {
+        Some(Value::String(s)) => s,
+        _ => return Err("Value 0 not a string".to_string()),
+    };
+    let n = match args.get(1) {
+        Some(Value::Number(n)) => n.as_u64().ok_or("Value 1 not a positive int".to_string())?,
+        _ => return Err("Value 1 not a num".to_string()),
+    };
+    let vs = _wrap(s, n as usize);
+    Ok(Value::Array(
+        vs.into_iter().map(|v| Value::String(v)).collect(),
+    ))
+}
+
+fn _wrap(s: &str, mx: usize) -> Vec<String> {
+    let mut cword = String::new();
+    let mut cline = String::new();
+    let mut res: Vec<String> = Vec::new();
+
+    for c in s.chars() {
+        if cline.len() + cword.len() > mx {
+            if cline.len() == 0 {
+                cline.push_str(&cword[..mx]);
+                cline.push('-');
+                cword = String::from(&cword[mx..]);
+            } else {
+                cword = cword[1..].to_string();
+            }
+
+            res.push(cline);
+            cline = "".to_string();
+        }
+        match c {
+            '\n' => {
+                cline.push_str(&cword);
+                cword.clear();
+                res.push(cline);
+                cline = "".to_string();
+            }
+            '-' => {
+                cline.push_str(&cword);
+                cline.push('-');
+                cword = String::from(" ");
+            }
+            ' ' => {
+                cline.push_str(&cword);
+                cword = String::from(" ");
+            }
+            _ => {
+                cword.push(c);
+            }
+        }
+    }
+    cline.push_str(&cword);
+    res.push(cline);
+    res
+}

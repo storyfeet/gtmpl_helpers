@@ -64,6 +64,8 @@ pub trait THelper: Sized {
     fn with_math(self) -> Self {
         self.push_helper("add", math::add)
             .push_helper("mul", math::mul)
+            .push_helper("sub", math::sub)
+            .push_helper("div", math::div)
     }
 
     fn with_range(self) -> Self {
@@ -75,11 +77,13 @@ pub trait THelper: Sized {
     fn with_select(self) -> Self {
         self.push_helper("b_sel", select::b_sel)
             .push_helper("match", select::v_match)
+            .push_helper("has", select::has)
     }
 
     fn with_string(self) -> Self {
         self.push_helper("ccat", string::ccat)
             .push_helper("sep", string::sep)
+            .push_helper("wrap", string::wrap)
     }
 
     fn with_svg(self) -> Self {

@@ -31,3 +31,8 @@ However that is tricky to demo in a doctest.
 If you wish to add more helpers send me a PR and I'll be happy to add them, as long as your happy with the MIT licence for everything you contribute.
 
 
+
+# changelog :
+
+## v0.1.2:
+Now has "sub, div and has" methods also "wrap" added, for performing linewraps on string.

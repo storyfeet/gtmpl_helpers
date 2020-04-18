@@ -69,7 +69,7 @@ pub fn sub(args: &[Value]) -> Result<Value, String> {
         _ => return Err("Cannot sub non num".to_string()),
     };
 
-    if args.len() == 0 {
+    if args.len() == 1 {
         if let Some(f) = n.as_f64() {
             return Ok(Value::Number(Number::from(-f)));
         } else if let Some(i) = n.as_i64() {
@@ -77,7 +77,7 @@ pub fn sub(args: &[Value]) -> Result<Value, String> {
         }
         return Err("Too big to negate".to_string());
     }
-    let mut res = Number::from(0);
+    let mut res = n.clone();
     for a in &args[1..] {
         if let Value::Number(n2) = a {
             if let (Some(f1), Some(f2)) = (res.as_f64(), n2.as_f64()) {

@@ -1,5 +1,17 @@
 use gtmpl_value::{Number, Value};
 
+pub fn has(args: &[Value]) -> Result<Value, String> {
+    Ok(Value::Bool(match args.get(0) {
+        Some(Value::Bool(b)) => *b,
+        Some(Value::Number(n)) => (*n) >= Number::from(0),
+        Some(Value::NoValue) | Some(Value::Nil) => false,
+        Some(Value::String(s)) => s.len() != 0,
+        Some(Value::Array(a)) => a.len() != 0,
+        Some(Value::Map(m)) => m.len() != 0,
+        _ => return Err("First Expr must be boolable".to_string()),
+    }))
+}
+
 pub fn b_sel(args: &[Value]) -> Result<Value, String> {
     let b_val = match args.get(0) {
         Some(Value::Bool(b)) => *b,
@@ -8,7 +20,7 @@ pub fn b_sel(args: &[Value]) -> Result<Value, String> {
         Some(Value::String(s)) => s.len() != 0,
         Some(Value::Array(a)) => a.len() != 0,
         Some(Value::Map(m)) => m.len() != 0,
-        _ => return Err("First Expr must be bool or Num".to_string()),
+        _ => return Err("First Expr must be boolable".to_string()),
     };
 
     if b_val {
