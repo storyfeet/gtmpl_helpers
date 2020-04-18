@@ -1,5 +1,19 @@
 use gtmpl_value::Value;
 
+/// svg properties x y in that order
+/// Optional param units on the end, else assume px
+pub fn xy(args: &[Value]) -> Result<Value, String> {
+    let u = match args.get(3) {
+        Some(v) => v.to_string(),
+        None => "px".to_string(),
+    };
+    let y = args.get(1).ok_or("Y not supplied".to_string())?;
+    let x = args.get(0).ok_or("X not supplied".to_string())?;
+    Ok(Value::String(format!(r#"x="{}{2}" y="{}{2}" "#, x, y, u)))
+}
+
+/// svg properties x y width and height, in that order
+/// Optional param units on the end, else assume px
 pub fn xywh(args: &[Value]) -> Result<Value, String> {
     let u = match args.get(4) {
         Some(v) => v.to_string(),
@@ -15,6 +29,8 @@ pub fn xywh(args: &[Value]) -> Result<Value, String> {
     )))
 }
 
+/// Svg properties fill stroke and stroke-width
+/// @args : fill, stroke, stroke-width , [Units]
 pub fn fl_stk(args: &[Value]) -> Result<Value, String> {
     let u = match args.get(3) {
         Some(v) => v.to_string(),

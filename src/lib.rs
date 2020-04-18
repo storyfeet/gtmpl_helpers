@@ -88,6 +88,7 @@ pub trait THelper: Sized {
 
     fn with_svg(self) -> Self {
         self.push_helper("xywh", svg::xywh)
+            .push_helper("xy", svg::xy)
             .push_helper("fl_stk", svg::fl_stk)
             .push_helper("font", svg::font)
             .push_helper("xml_es", svg::xml_es)
