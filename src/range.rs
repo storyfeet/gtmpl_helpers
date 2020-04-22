@@ -41,3 +41,31 @@ pub fn safe_len(args: &[Value]) -> Result<Value, String> {
     }
     Ok(Value::Number(Number::from(res)))
 }
+
+fn to_ou64(o: Option<&Value>) -> Option<u64> {
+    match o {
+        Some(Value::Number(n)) => n.as_u64(),
+        Some(_) => None,
+        None => None,
+    }
+}
+
+pub fn num_range(args: &[Value]) -> Result<Value, String> {
+    if args.len() == 0 {
+        return Err("n_range needs at least one arg".to_string());
+    }
+    let s1 = to_ou64(args.get(0)).ok_or("num_range requires integers")?;
+    let (start, stop) = match to_ou64(args.get(1)) {
+        Some(n) => (s1, n),
+        None => (0, s1),
+    };
+    let step = to_ou64(args.get(2)).unwrap_or(1);
+
+    let mut res = Vec::new();
+    let mut n = start;
+    while n < stop {
+        res.push(Value::Number(Number::from(n)));
+        n += step;
+    }
+    Ok(Value::Array(res))
+}

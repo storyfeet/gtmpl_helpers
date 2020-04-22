@@ -45,6 +45,11 @@ pub mod string;
 /// Domain specific svg methods for creating trickier shapes.
 pub mod svg;
 
+/// Executors for other programs Not included in all because of security issues.
+/// While there is a use case for including them, it these helpers should not be added lightly to
+/// your application, especially not to web facing systems.
+pub mod exec;
+
 /// This trait exists to give methods to the Template object directly.
 /// It is not intended to be applied to anything else.
 /// By "use"ing this trait, you gain the ability to write "with_svg()" or "with_all()
@@ -72,6 +77,7 @@ pub trait THelper: Sized {
         self.push_helper("is_list", range::is_list)
             .push_helper("as_list", range::as_list)
             .push_helper("safe_len", range::safe_len)
+            .push_helper("num_range", range::num_range)
     }
 
     fn with_select(self) -> Self {
@@ -94,12 +100,23 @@ pub trait THelper: Sized {
             .push_helper("xml_es", svg::xml_es)
     }
 
+    #[deprecated(since = "0.1.2", note = "please use `with_defaults` instead")]
     fn with_all(self) -> Self {
+        self.with_defaults()
+    }
+
+    fn with_defaults(self) -> Self {
         self.with_string()
             .with_math()
             .with_range()
             .with_select()
             .with_svg()
+    }
+
+    ///This is not included in the "with_defaults" option to make sure you know you have added
+    ///it, as it would be dangerous to use in any web facing programs
+    fn with_exec(self) -> Self {
+        self.push_helper("exec", exec::exec)
     }
 }
 
