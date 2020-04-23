@@ -78,6 +78,7 @@ pub trait THelper: Sized {
             .push_helper("as_list", range::as_list)
             .push_helper("safe_len", range::safe_len)
             .push_helper("num_range", range::num_range)
+            .push_helper("sort_on", range::sort_on)
     }
 
     fn with_select(self) -> Self {

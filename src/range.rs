@@ -69,3 +69,43 @@ pub fn num_range(args: &[Value]) -> Result<Value, String> {
     }
     Ok(Value::Array(res))
 }
+
+pub fn compare_numbers(na: &Number, nb: &Number) -> Option<std::cmp::Ordering> {
+    if let (Some(fa), Some(fb)) = (na.as_f64(), nb.as_f64()) {
+        return fa.partial_cmp(&fb);
+    }
+    None
+}
+
+pub fn compare_values(va: &Value, vb: &Value) -> Option<std::cmp::Ordering> {
+    match (va, vb) {
+        (Value::String(sa), Value::String(sb)) => Some(sa.cmp(sb)),
+        (Value::Number(na), Value::Number(nb)) => compare_numbers(na, nb),
+        _ => None,
+    }
+}
+
+pub fn sort_on(args: &[Value]) -> Result<Value, String> {
+    let sval = match args.get(0) {
+        Some(Value::String(s)) => s,
+        _ => Err("Sort on requires a property name to sort on")?,
+    };
+    let mut ts = match args.get(1) {
+        Some(Value::Array(a)) => a.clone(),
+        _ => Err("Sort on requires an array to sort as second param")?,
+    };
+    //TODO consider allowing dot in property choice
+    ts.sort_by(|a, b| {
+        if let (Value::Map(ma), Value::Map(mb)) = (a, b) {
+            match (ma.get(sval), mb.get(sval)) {
+                (Some(va), Some(vb)) => {
+                    return compare_values(va, vb).unwrap_or(std::cmp::Ordering::Equal)
+                }
+                _ => return std::cmp::Ordering::Equal,
+            }
+        }
+        std::cmp::Ordering::Equal
+    });
+    //a2.sort_by()
+    Ok(Value::Array(ts))
+}
