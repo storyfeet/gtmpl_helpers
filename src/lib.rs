@@ -90,6 +90,7 @@ pub trait THelper: Sized {
         self.push_helper("ccat", string::ccat)
             .push_helper("sep", string::sep)
             .push_helper("wrap", string::wrap)
+            .push_helper("markdown", string::markdown)
     }
 
     fn with_svg(self) -> Self {

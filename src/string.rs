@@ -92,3 +92,15 @@ fn _wrap(s: &str, mx: usize) -> Vec<String> {
     res.push(cline);
     res
 }
+
+pub fn markdown(args: &[Value]) -> Result<Value, String> {
+    use pulldown_cmark::*;
+    let mut res = String::new();
+    for a in args {
+        if let Value::String(s) = a {
+            let p = Parser::new(s);
+            html::push_html(&mut res, p);
+        }
+    }
+    Ok(Value::String(res))
+}
