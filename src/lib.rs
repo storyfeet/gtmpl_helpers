@@ -79,6 +79,7 @@ pub trait THelper: Sized {
             .push_helper("safe_len", range::safe_len)
             .push_helper("num_range", range::num_range)
             .push_helper("sort_on", range::sort_on)
+            .push_helper("to_json", range::to_json)
     }
 
     fn with_select(self) -> Self {

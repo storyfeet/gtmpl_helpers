@@ -109,3 +109,89 @@ pub fn sort_on(args: &[Value]) -> Result<Value, String> {
     //a2.sort_by()
     Ok(Value::Array(ts))
 }
+
+pub fn v_to_json(v: &Value) -> String {
+    match v {
+        Value::Map(m) | Value::Object(m) => {
+            let mut res = "{".to_string();
+            let mut precoma = "";
+            let pre2 = if m.len() > 4 { ",\n\t" } else { "," };
+            for (k, v) in m {
+                res.push_str(&format!(r#"{}"{}":{}"#, precoma, k, v_to_json(v)));
+                precoma = pre2;
+            }
+            res.push_str("}");
+            res
+        }
+        Value::Array(a) => {
+            let mut res = "[".to_string();
+            let mut precoma = "";
+            let pre2 = if a.len() > 5 { ",\n\t" } else { "," };
+            for v in a {
+                res.push_str(&format!(r"{}{}", precoma, v_to_json(v)));
+                precoma = pre2
+            }
+            res.push(']');
+            res
+        }
+        Value::String(s) => {
+            let mut res = "\"".to_string();
+            for c in s.chars() {
+                match c {
+                    //TODO handle unicode points and backspace
+                    '\\' => res.push_str("\\\\"),
+                    '"' => res.push_str("\\\""),
+                    '\n' => res.push_str("\\n"),
+                    '\r' => res.push_str("\\r"),
+                    '\t' => res.push_str("\\t"),
+                    '/' => res.push_str("\\/"),
+                    cv => res.push(cv),
+                }
+            }
+            res.push('\"');
+            res
+        }
+        Value::Bool(b) => b.to_string(),
+        Value::Number(n) => {
+            if let Some(f) = n.as_f64() {
+                f.to_string()
+            } else if let Some(i) = n.as_i64() {
+                i.to_string()
+            } else {
+                n.as_u64().unwrap().to_string()
+            }
+        }
+        _ => "null".to_string(),
+    }
+}
+
+///convert the value to a json string
+pub fn to_json(args: &[Value]) -> Result<Value, String> {
+    if args.len() == 0 {
+        return Ok(Value::String("null".to_string()));
+    }
+    if args.len() == 1 {
+        return Ok(Value::String(v_to_json(&args[0])));
+    }
+
+    let mut res = "[".to_string();
+    let mut precoma = "";
+    let pre2 = if args.len() > 5 { ",\n\t" } else { "," };
+    for v in args {
+        res.push_str(&format!(r"{}{}", precoma, v_to_json(v)));
+        precoma = pre2;
+    }
+    res.push(']');
+    Ok(Value::String(res))
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    pub fn test_number_prints_a_string() {
+        let v = Value::Number(Number::from(43));
+        let s = v_to_json(&v);
+        assert_eq!(s, "43");
+    }
+}
