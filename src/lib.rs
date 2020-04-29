@@ -71,6 +71,8 @@ pub trait THelper: Sized {
             .push_helper("mul", math::mul)
             .push_helper("sub", math::sub)
             .push_helper("div", math::div)
+            .push_helper("idiv", math::idiv)
+            .push_helper("mod", math::imod)
     }
 
     fn with_range(self) -> Self {

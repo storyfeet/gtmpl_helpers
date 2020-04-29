@@ -98,3 +98,40 @@ pub fn sub(args: &[Value]) -> Result<Value, String> {
     }
     Ok(Value::Number(res))
 }
+
+///returns the modulus of arg[0] % arg[1]
+pub fn imod(args: &[Value]) -> Result<Value, String> {
+    if args.len() != 2 {
+        Err("helper 'mod' requires exactly 2 arguments")?;
+    }
+    match (&args[0], &args[1]) {
+        (Value::Number(a), Value::Number(b)) => {
+            if let (Some(ai), Some(bi)) = (a.as_i64(), b.as_i64()) {
+                return Ok(Value::Number(Number::from(ai % bi)));
+            }
+            if let (Some(au), Some(bu)) = (a.as_u64(), b.as_u64()) {
+                return Ok(Value::Number(Number::from(au % bu)));
+            }
+            Err("Helper 'mod' requires both arguments to be integers".to_string())
+        }
+        _ => Err("Helper 'mod' requires both arguments to be integers".to_string()),
+    }
+}
+///returns the integer division result of arg[0] % arg[1]
+pub fn idiv(args: &[Value]) -> Result<Value, String> {
+    if args.len() != 2 {
+        Err("helper 'idiv' requires exactly 2 arguments")?;
+    }
+    match (&args[0], &args[1]) {
+        (Value::Number(a), Value::Number(b)) => {
+            if let (Some(ai), Some(bi)) = (a.as_i64(), b.as_i64()) {
+                return Ok(Value::Number(Number::from(ai / bi)));
+            }
+            if let (Some(au), Some(bu)) = (a.as_u64(), b.as_u64()) {
+                return Ok(Value::Number(Number::from(au / bu)));
+            }
+            Err("Helper 'idiv' requires both arguments to be integers".to_string())
+        }
+        _ => Err("Helper 'idiv' requires both arguments to be integers".to_string()),
+    }
+}
