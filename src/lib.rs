@@ -88,6 +88,7 @@ pub trait THelper: Sized {
         self.push_helper("b_sel", select::b_sel)
             .push_helper("match", select::v_match)
             .push_helper("has", select::has)
+            .push_helper("first", select::first)
     }
 
     fn with_string(self) -> Self {

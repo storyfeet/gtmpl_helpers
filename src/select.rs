@@ -12,6 +12,16 @@ pub fn has(args: &[Value]) -> Result<Value, String> {
     }))
 }
 
+pub fn first(args: &[Value]) -> Result<Value, String> {
+    for a in args {
+        match a {
+            Value::NoValue | Value::Nil => {}
+            v => return Ok(v.clone()),
+        }
+    }
+    return Err("No Value wasn't null".to_string());
+}
+
 pub fn b_sel(args: &[Value]) -> Result<Value, String> {
     let b_val = match args.get(0) {
         Some(Value::Bool(b)) => *b,
