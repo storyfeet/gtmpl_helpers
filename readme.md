@@ -36,6 +36,9 @@ If you wish to add more helpers send me a PR and I'll be happy to add them, as l
 
 ## v0.1.4 wip
 * add svg - xy12 for lines (x1,y1,x2,y2)
+* added not_null  
+* added to_list and to_flat_list
+* deprecated as_list to avoid confusion in changed behavior
 
 ## v0.1.3 
 * add idiv and mod for integer behaviours

@@ -1,4 +1,5 @@
 use gtmpl_value::{Number, Value};
+use std::collections::HashMap;
 pub fn is_list(args: &[Value]) -> Result<Value, String> {
     if args.len() != 1 {
         return Err(format!("Is list expected 1 elem, got{}", args.len()));
@@ -18,6 +19,10 @@ pub fn v_as_list(v: &Value) -> Vec<Value> {
     }
 }
 
+#[deprecated(
+    since = "0.1.4",
+    note = r#"use "to_list" to keep members nested or "to_flat_list" for flattning"#
+)]
 pub fn as_list(args: &[Value]) -> Result<Value, String> {
     if args.len() == 0 {
         return Err("'as_list' expected at least 1 elem".to_string());
@@ -27,6 +32,48 @@ pub fn as_list(args: &[Value]) -> Result<Value, String> {
         res.extend(v_as_list(a));
     }
     Ok(Value::Array(res))
+}
+
+pub fn to_list(args: &[Value]) -> Result<Value, String> {
+    if args.len() == 0 {
+        return Err("'as_list' expected at least 1 elem".to_string());
+    }
+    let mut res = Vec::new();
+    for a in args {
+        if *a != Value::NoValue && *a != Value::Nil {
+            res.push(a.clone());
+        }
+    }
+    Ok(Value::Array(res))
+}
+
+pub fn to_flat_list(args: &[Value]) -> Result<Value, String> {
+    if args.len() == 0 {
+        return Err("'as_list' expected at least 1 elem".to_string());
+    }
+    let mut res = Vec::new();
+    for a in args {
+        res.extend(v_as_list(a));
+    }
+    Ok(Value::Array(res))
+}
+
+pub fn as_map(args: &[Value]) -> Result<Value, String> {
+    let mut res = HashMap::new();
+    let mut it = args.into_iter();
+    loop {
+        match it.next() {
+            Some(Value::String(s)) => match it.next() {
+                Some(Value::NoValue) | Some(Value::Nil) => {}
+                Some(v) => {
+                    res.insert(s.clone(), v.clone());
+                }
+                None => return Err("Keys must have value pairs".to_string()),
+            },
+            None => return Ok(Value::Map(res)),
+            _ => return Err("Keys must be string (Every other item is a key)".to_string()),
+        }
+    }
 }
 
 pub fn safe_len(args: &[Value]) -> Result<Value, String> {

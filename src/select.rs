@@ -1,9 +1,18 @@
 use gtmpl_value::{Number, Value};
 
+pub fn not_null(args: &[Value]) -> Result<Value, String> {
+    for a in args {
+        if *a == Value::NoValue || *a == Value::Nil {
+            return Ok(Value::Bool(false));
+        }
+    }
+    Ok(Value::Bool(true))
+}
+
 pub fn has(args: &[Value]) -> Result<Value, String> {
     Ok(Value::Bool(match args.get(0) {
         Some(Value::Bool(b)) => *b,
-        Some(Value::Number(n)) => (*n) >= Number::from(0),
+        Some(Value::Number(n)) => (*n) != Number::from(0),
         Some(Value::NoValue) | Some(Value::Nil) => false,
         Some(Value::String(s)) => s.len() != 0,
         Some(Value::Array(a)) => a.len() != 0,

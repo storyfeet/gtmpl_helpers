@@ -76,8 +76,11 @@ pub trait THelper: Sized {
     }
 
     fn with_range(self) -> Self {
+        #[allow(deprecated)]
         self.push_helper("is_list", range::is_list)
             .push_helper("as_list", range::as_list)
+            .push_helper("to_list", range::to_list)
+            .push_helper("to_flat_list", range::to_flat_list)
             .push_helper("safe_len", range::safe_len)
             .push_helper("num_range", range::num_range)
             .push_helper("sort_on", range::sort_on)
@@ -88,6 +91,7 @@ pub trait THelper: Sized {
         self.push_helper("b_sel", select::b_sel)
             .push_helper("match", select::v_match)
             .push_helper("has", select::has)
+            .push_helper("not_null", select::not_null)
             .push_helper("first", select::first)
     }
 
