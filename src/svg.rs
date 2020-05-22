@@ -28,6 +28,22 @@ pub fn xywh(args: &[Value]) -> Result<Value, String> {
         x, y, w, h, u
     )))
 }
+/// svg properties x y width and height, in that order
+/// Optional param units on the end, else assume px
+pub fn xy12(args: &[Value]) -> Result<Value, String> {
+    let u = match args.get(4) {
+        Some(v) => v.to_string(),
+        None => "px".to_string(),
+    };
+    let y2 = args.get(3).ok_or("Y2 not supplied".to_string())?;
+    let x2 = args.get(2).ok_or("X2 not supplied".to_string())?;
+    let y = args.get(1).ok_or("Y2 not supplied".to_string())?;
+    let x = args.get(0).ok_or("X1 not supplied".to_string())?;
+    Ok(Value::String(format!(
+        r#"x1="{}{4}" y1="{}{4}" x2="{}{4}" y2="{}{4}" "#,
+        x, y, x2, y2, u
+    )))
+}
 
 /// Svg properties fill stroke and stroke-width
 /// @args : fill, stroke, stroke-width , [Units]

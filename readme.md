@@ -34,6 +34,9 @@ If you wish to add more helpers send me a PR and I'll be happy to add them, as l
 
 # changelog :
 
+## v0.1.4 wip
+* add svg - xy12 for lines (x1,y1,x2,y2)
+
 ## v0.1.3 
 * add idiv and mod for integer behaviours
 * changed with_all to with_defaults, to make it clear that it does not include exec,
