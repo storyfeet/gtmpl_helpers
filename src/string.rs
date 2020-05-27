@@ -3,7 +3,14 @@ use gtmpl_value::Value;
 pub fn ccat(args: &[Value]) -> Result<Value, String> {
     let mut res = String::new();
     for v in args {
-        res.push_str(&v.to_string());
+        match v {
+            Value::Array(a) => {
+                for av in a {
+                    res.push_str(&av.to_string());
+                }
+            }
+            _ => res.push_str(&v.to_string()),
+        }
     }
     Ok(Value::String(res))
 }
