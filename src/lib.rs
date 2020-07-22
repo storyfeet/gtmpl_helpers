@@ -50,6 +50,9 @@ pub mod svg;
 /// your application, especially not to web facing systems.
 pub mod exec;
 
+///File path reshaping, "parent" "join"
+pub mod file;
+
 /// This trait exists to give methods to the Template object directly.
 /// It is not intended to be applied to anything else.
 /// By "use"ing this trait, you gain the ability to write "with_svg()" or "with_all()
@@ -111,6 +114,14 @@ pub trait THelper: Sized {
             .push_helper("xml_es", svg::xml_es)
     }
 
+    fn with_file(self) -> Self {
+        self.push_helper("parent", file::parent)
+            .push_helper("join", file::join)
+            .push_helper("bread_crumbs", file::bread_crumbs)
+            .push_helper("base_name", file::base_name)
+            .push_helper("base_name_sure", file::base_name_sure)
+    }
+
     #[deprecated(since = "0.1.2", note = "please use `with_defaults` instead")]
     fn with_all(self) -> Self {
         self.with_defaults()
@@ -122,6 +133,7 @@ pub trait THelper: Sized {
             .with_range()
             .with_select()
             .with_svg()
+            .with_file()
     }
 
     ///This is not included in the "with_defaults" option to make sure you know you have added
